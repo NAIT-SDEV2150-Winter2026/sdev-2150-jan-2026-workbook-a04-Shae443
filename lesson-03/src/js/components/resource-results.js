@@ -51,6 +51,7 @@ template.innerHTML = `
 
 class ResourceResults extends HTMLElement {
   // TODO: Create a private field for results data
+  #results = [];
 
   constructor() {
     super();
@@ -60,8 +61,20 @@ class ResourceResults extends HTMLElement {
   }
 
   // TODO: Implement setter for results data, remember to render
+  set results(data) {
+    this.#results = data;
+    this.render();
+  }
 
   // TODO: Add an event handler method for result selection
+  _handleResultClick(event) {
+    const clickedElement = event.target.closest('button[data-id]');
+    if (clickedElement) {
+      const selectedId = clickedElement.getAttribute('data-id');
+      //search the results for the dara that corresponds to the data-id
+      const resource = this.#results.find(r => r.id === selected);
+    }
+  }
 
   connectedCallback() {
     // TODO: Add a click event listener to handle result selection
@@ -71,12 +84,31 @@ class ResourceResults extends HTMLElement {
 
   // TODO: Clean up event listener in disconnectedCallback
 
-  
-
   render() {
     // TODO: Update to render from the private results field, if it's empty, show "No results found" message
-    
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    const node = template.content.cloneNode(true);
+    const listGroup = node.querySelector('list-group');
+
+    if (!this.results || this.#results.length === 0); {
+      ;
+    } else {
+      for (const result of this.#results) {
+        const listGroupContent = `
+       <button type="button" class="list-group-item list-group-item-action" aria-current="true">
+          <div class="d-flex w-100 justify-content-between">
+            <h2 class="h6 mb-1">Peer Tutoring Centre</h2>
+              <small>Academic</small>
+          </div>
+          <p class="mb-1 small text-body-secondary">Drop-in tutoring and study support.</p>
+          <small class="text-body-secondary">Building W, Room W101</small>
+    </button>
+    `;
+    listGroupContent.innerHTML += listGroupContent;
+      }
+    }
+
+    this.shadowRoot.innerHTML = '';
+    this.shadowRoot.appendChild(node);
   }
 }
 
